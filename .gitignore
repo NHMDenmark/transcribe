@@ -1,0 +1,37 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+# Database backups
+*.sql
+sql_databases/
+
+# Database/log files
+mysql_files.log
+
+# Local backup scripts
+sql_backup_script.sh
+
+# Uploaded/generated cover images
+public/cover_images/*
+public/avatars/*
+# Files uploaded through the editor (public/uploads)
+/public/uploads
+
+.env.testing
+/public/branding/*

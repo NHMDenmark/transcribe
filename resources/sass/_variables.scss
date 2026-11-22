@@ -1,0 +1,14 @@
+// Body
+$body-bg: #f8fafc;
+
+// Brand color, instead of Bootstrap's generic default blue (#0d6efd) — this is the single
+// highest-leverage color change: every button/link/badge/focus-ring/nav-active
+// state derives from it automatically. It is part of the compiled stylesheet: to use
+// another color, change it here and run npm run build.
+$primary: #054791;
+
+// Typography
+$font-family-sans-serif: 'Nunito', sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$headings-font-weight: 600;

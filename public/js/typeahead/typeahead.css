@@ -1,0 +1,115 @@
+/*typeahead CSS Bootrap 3. Tried out Typeahead CSS for bootstrap 4, but didn't wotk well */
+/*middified to display gray background on active item by adding this: "dropdown-menu li.active," on the selected style */
+
+span.twitter-typeahead .tt-menu {
+    cursor: pointer;
+}
+
+.dropdown-menu,
+span.twitter-typeahead .tt-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 1rem;
+    color: #373a3c;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+span.twitter-typeahead .tt-suggestion {
+    display: block;
+    width: 100%;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #373a3c;
+    text-align: inherit;
+    white-space: nowrap;
+    background: none;
+    border: 0;
+}
+
+span.twitter-typeahead .tt-suggestion:focus,
+.dropdown-item:hover, .dropdown-menu li.active,
+span.twitter-typeahead .tt-suggestion:hover {
+    color: #2b2d2f;
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
+span.twitter-typeahead .active.tt-suggestion,
+span.twitter-typeahead .tt-suggestion.tt-cursor,
+span.twitter-typeahead .active.tt-suggestion:focus,
+span.twitter-typeahead .tt-suggestion.tt-cursor:focus,
+span.twitter-typeahead .active.tt-suggestion:hover,
+span.twitter-typeahead .tt-suggestion.tt-cursor:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #0275d8;
+    outline: 0;
+}
+
+span.twitter-typeahead .disabled.tt-suggestion,
+span.twitter-typeahead .disabled.tt-suggestion:focus,
+span.twitter-typeahead .disabled.tt-suggestion:hover {
+    color: #818a91;
+}
+
+span.twitter-typeahead .disabled.tt-suggestion:focus,
+span.twitter-typeahead .disabled.tt-suggestion:hover {
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+    background-image: none;
+    filter: "progid:DXImageTransform.Microsoft.gradient(enabled = false)";
+}
+
+span.twitter-typeahead {
+    width: 100%;
+}
+
+.input-group span.twitter-typeahead {
+    display: block !important;
+    background: violet;
+}
+
+.input-group span.twitter-typeahead .tt-menu {
+    top: 2.375rem !important;
+}
+
+/*limit the height and allow scroll */
+ul.typeahead.dropdown-menu {
+    max-height: 400px;
+    overflow: auto;
+}
+
+/* The image itself is set inline by typeahead.js, from window.APP_LOADING_GIF_URL
+   (an institution's own uploaded GIF, configured at /settings) — this file can't
+   reference it directly since it's not processed by Blade. */
+.background-loading:focus{
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+}
+
+/* Fallback when no custom loading GIF is configured: a plain animated spinner
+   that works for any institution's branding without needing an uploaded asset
+   at all. An inline SVG (not a GIF) so it stays a single CSS rule — its
+   built-in SMIL animation (animateTransform) is what actually spins it. */
+.background-loading-generic:focus{
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'%3E%3Ccircle cx='25' cy='25' r='20' fill='none' stroke='%23999999' stroke-width='5' stroke-linecap='round' stroke-dasharray='90 60'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 25 25' to='360 25 25' dur='0.8s' repeatCount='indefinite'/%3E%3C/circle%3E%3C/svg%3E");
+}
