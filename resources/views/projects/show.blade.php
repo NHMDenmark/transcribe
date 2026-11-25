@@ -24,6 +24,9 @@
             }
             ?>
             <h3><?php echo get_dialogs('project_title_' . $project->id, $active_language); ?></h3>
+            @if (Auth::id() and Gate::allows('manage-projects', $project))
+            @include('projects.ownership')
+            @endif
             <p>{{$project->specimens}} <?php echo get_dialogs('Specimens', $active_language); ?></p>
             <div class="progress mb-3" role="progressbar" aria-label="Project Progress" aria-valuenow="<?php echo round($project->completed_percent, 2) . ' %'; ?>" aria-valuemin="0" aria-valuemax="100">
                 <div class="progress-bar" style="width:<?php echo round($project->completed_percent, 2) . '%'; ?>"><?php echo round($project->completed_percent, 2) . '%'; ?></div>

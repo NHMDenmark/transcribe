@@ -4,6 +4,17 @@ All notable changes to this project are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+- Those who manage a project now see who created it and who else manages it: on the project page, in the project list and in the project form. Other users do not.
+- In the project form the creator is listed first among the project managers, ticked and locked: they always manage the project and cannot be removed from it.
+
+### Changed
+- The list of **Project managers** can be changed by administrators and by the managers of that project (the creator included), not only by administrators. A manager who unticks themselves is asked to confirm, because they lose access to the project.
+
+---
+
 ## [1.0.0] — 2026-11-22
 
 ### Added

@@ -147,7 +147,7 @@ class RoleAccessTest extends TestCase
         $this->assertNotSame('Hijack', $project->fresh()->name);
     }
 
-    public function test_the_managers_of_a_project_are_set_by_root_or_admin_only(): void
+    public function test_the_managers_of_a_project_are_set_by_root_admin_and_the_projects_own_managers(): void
     {
         $admin = $this->user('admin');
         $pm = $this->user('project_manager');
@@ -160,8 +160,21 @@ class RoleAccessTest extends TestCase
         $this->actingAs($admin)->post('/projects', $form + ['managers' => [$pm->id, $notPm->id]]);
         $this->assertSame([$pm->id], $managers());   // only users with the role
 
+        // a manager of the project may take the others out again
         $this->actingAs($pm)->post('/projects', $form + ['managers' => []]);
-        $this->assertSame([$pm->id], $managers());   // a manager cannot reshuffle them
+        $this->assertSame([], $managers());
+    }
+
+    public function test_a_manager_of_another_project_cannot_touch_the_managers_of_this_one(): void
+    {
+        $admin = $this->user('admin');
+        $pm = $this->user('project_manager');
+        $stranger = $this->user('project_manager');
+        $project = $this->project($admin);
+        $project->managers()->attach($pm->id);
+
+        $this->actingAs($stranger)->post('/projects', ['name' => $project->name, 'project_id' => $project->id, 'managers_present' => 1, 'managers' => []])->assertForbidden();
+        $this->assertSame([$pm->id], $project->managers()->pluck('users.id')->all());
     }
 
     public function test_unticking_everyone_removes_the_managers_but_a_form_without_the_list_leaves_them(): void

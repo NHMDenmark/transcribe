@@ -51,6 +51,12 @@ class Project extends Model
                 };
         }
 
+        /** The user who created the project (user_id); null if that account no longer exists. */
+        public function creator()
+        {
+                return $this->belongsTo(User::class, 'user_id');
+        }
+
         /** People allowed to manage this project besides its creator (user_id). */
         public function managers()
         {

@@ -206,8 +206,9 @@ class ProjectsController extends Controller
 		$project->sync_compare_round_decimals = is_numeric($decimals) ? max(0, min(10, (int) $decimals)) : null;
 		$project->save();
 
-		// who else may manage it: only root/admin decide, and only users that hold the project manager role
-		if (Gate::allows('manage-users') && $request->has('managers_present')) {
+		// who else may manage it: root/admin and the project's own managers (its creator included) decide,
+		// and only users that hold the project manager role can be given it; the creator is not in this list
+		if (Gate::allows('manage-projects', $project) && $request->has('managers_present')) {
 			$project->managers()->sync(
 				\App\Models\User::where('role', 'project_manager')->whereIn('id', (array) $request->input('managers', []))->pluck('id')->all()
 			);

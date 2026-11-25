@@ -47,24 +47,52 @@
                 <small class="form-text text-muted">{!! get_dialogs('The id of the Specify collection this project sends its validated values to. Leave empty to use the default of the installation.', $active_language) !!}</small>
             </div>
 
-            @can('manage-users')
+            @can('manage-projects', $project->exists ? $project : null)
             <?php
-            $manager_choices = \App\Models\User::where('role', 'project_manager')->orderBy('name')->get();
+            $project_creator = $project->exists ? $project->creator : null;
+            // the creator is listed apart, ticked and locked, so they are not offered twice
+            $manager_choices = \App\Models\User::where('role', 'project_manager')
+                ->when($project_creator, fn ($q) => $q->where('id', '!=', $project_creator->id))
+                ->orderBy('name')->get();
             $chosen_managers = $project->exists ? $project->managers()->pluck('users.id')->all() : [];
             ?>
             <div class="mb-3">
                 <label class="col-form-label">{!! get_dialogs('Project managers (besides its creator):', $active_language) !!} {!! help_hint('project_managers', $active_language) !!}</label>
                 {{-- tells the server this form really carries the list, so an unchecked box means "remove" and a form without it leaves the managers alone --}}
                 <input type="hidden" name="managers_present" value="1">
-                @forelse($manager_choices as $manager)
+                @if ($project_creator)
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="managers[]" id="manager_{{ $manager->id }}" value="{{ $manager->id }}" {{ in_array($manager->id, $chosen_managers) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="manager_{{ $manager->id }}">{{ $manager->name }} <span class="text-muted small">{{ $manager->email }}</span></label>
+                    {{-- disabled, so it is never submitted: the creator always manages the project and cannot be unticked --}}
+                    <input class="form-check-input" type="checkbox" id="manager_creator" checked disabled>
+                    <label class="form-check-label" for="manager_creator">{{ $project_creator->name }} <span class="text-muted small">{{ $project_creator->email }}</span> <span class="badge text-bg-secondary">{!! get_dialogs('creator', $active_language) !!}</span></label>
+                </div>
+                @endif
+                @forelse($manager_choices as $manager)
+                <?php
+                // a manager who is not an administrator loses access to the project by unticking themselves
+                $is_self = auth()->id() === $manager->id && !auth()->user()->isAdmin();
+                ?>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="managers[]" id="manager_{{ $manager->id }}" value="{{ $manager->id }}" {{ in_array($manager->id, $chosen_managers) ? 'checked' : '' }} {!! $is_self ? 'data-self="1"' : '' !!}>
+                    <label class="form-check-label" for="manager_{{ $manager->id }}">{{ $manager->name }} <span class="text-muted small">{{ $manager->email }}</span>@if ($is_self) <span class="badge text-bg-light border">{!! get_dialogs('you', $active_language) !!}</span>@endif</label>
                 </div>
                 @empty
+                {{-- the creator is left out of the choices, so they only count as "a project manager" if that is their role --}}
+                @unless ($project_creator && $project_creator->role === 'project_manager')
                 <p class="text-muted small mb-1">{!! get_dialogs('No user has the "Project manager" role yet. Give it to someone in Admin, Users.', $active_language) !!}</p>
+                @endunless
                 @endforelse
                 <small class="form-text text-muted">{!! get_dialogs('Tick the people who may manage this project; untick to remove them. Only users with the "Project manager" role are listed.', $active_language) !!}</small>
+                <script>
+                    // unticking yourself takes the project away from you: ask first, and put the tick back on "cancel"
+                    document.querySelectorAll('input[data-self]').forEach(function(box) {
+                        box.addEventListener('change', function() {
+                            if (!box.checked && !confirm(<?php echo json_encode(get_dialogs_simple('You will lose access to this project when you save. Continue?', $active_language)); ?>)) {
+                                box.checked = true;
+                            }
+                        });
+                    });
+                </script>
             </div>
             @endcan
 

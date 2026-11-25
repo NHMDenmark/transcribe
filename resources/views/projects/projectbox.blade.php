@@ -19,6 +19,9 @@
             <?php
             }
             ?>
+            @if (Auth::id() and Gate::allows('manage-projects', $project))
+            @include('projects.ownership')
+            @endif
             <h3><?php echo get_dialogs('project_title_' . $project->id, $active_language); ?></h3>
             <p><?php echo get_dialogs_html('project_abstract_' . $project->id, $active_language); ?></p>
             <p><a href="{{URL('/projects/'.$project->id)}}"><?php echo get_dialogs('read_more', $active_language); ?></a></p>

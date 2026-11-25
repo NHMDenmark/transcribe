@@ -79,7 +79,7 @@ return [
             'guide' => 'administration', 'anchor' => 'automatic-sync',
         ],
         'project_managers' => [
-            'text' => 'People who can manage this project and resolve its conflicts, besides its creator. They get that power only on this project.',
+            'text' => 'People who can manage this project and resolve its conflicts, besides its creator. They get that power only on this project, and any of them can add or remove the others.',
             'guide' => 'administration', 'anchor' => 'project-managers',
         ],
         'project_others_panel' => [
